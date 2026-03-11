@@ -15,6 +15,7 @@ interface Domain {
 
 interface DomainListProps {
     domains: Domain[];
+    onRefresh: (id: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     loading: boolean;
 }
@@ -65,7 +66,25 @@ function getStatusBadge(status: string | null, expiryDate: string | null) {
     );
 }
 
-export default function DomainList({ domains, onDelete, loading }: DomainListProps) {
+import { useState } from "react";
+
+export default function DomainList({ domains, onRefresh, onDelete, loading }: DomainListProps) {
+    const [refreshingIds, setRefreshingIds] = useState<Set<string>>(new Set());
+
+    const handleRefresh = async (id: string) => {
+        try {
+            setRefreshingIds((prev) => new Set(prev).add(id));
+            await onRefresh(id);
+        } catch (error) {
+            console.error("Failed to refresh domain:", error);
+        } finally {
+            setRefreshingIds((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(id);
+                return newSet;
+            });
+        }
+    };
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
@@ -131,13 +150,23 @@ export default function DomainList({ domains, onDelete, loading }: DomainListPro
                             </div>
                         </div>
 
-                        <button
-                            onClick={() => onDelete(domain.id)}
-                            className="ml-4 flex-shrink-0 rounded-lg p-2 text-gray-500 opacity-0 transition-all hover:bg-red-500/10 hover:text-red-400 group-hover:opacity-100"
-                            title="删除域名"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
+                        <div className="ml-4 flex items-center gap-1 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100">
+                            <button
+                                onClick={() => handleRefresh(domain.id)}
+                                disabled={refreshingIds.has(domain.id)}
+                                className="rounded-lg p-2 text-gray-500 transition-all hover:bg-emerald-500/10 hover:text-emerald-400 disabled:opacity-50"
+                                title="更新 WHOIS 信息"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${refreshingIds.has(domain.id) ? "animate-spin text-emerald-400" : ""}`} />
+                            </button>
+                            <button
+                                onClick={() => onDelete(domain.id)}
+                                className="rounded-lg p-2 text-gray-500 transition-all hover:bg-red-500/10 hover:text-red-400"
+                                title="删除域名"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}

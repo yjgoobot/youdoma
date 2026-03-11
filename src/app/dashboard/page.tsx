@@ -82,6 +82,21 @@ export default function DashboardPage() {
         }
     };
 
+    // Refresh domain
+    const handleRefreshDomain = async (id: string) => {
+        const res = await fetch(`/api/domains/${id}/refresh`, {
+            method: "POST",
+        });
+
+        if (res.ok) {
+            const updatedDomain = await res.json();
+            setDomains((prev) => prev.map((d) => (d.id === id ? updatedDomain : d)));
+        } else {
+            const data = await res.json();
+            throw new Error(data.error || "刷新失败");
+        }
+    };
+
     if (status === "loading") {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-950">
@@ -150,6 +165,7 @@ export default function DashboardPage() {
                 {/* Domain List */}
                 <DomainList
                     domains={domains}
+                    onRefresh={handleRefreshDomain}
                     onDelete={handleDeleteDomain}
                     loading={loading}
                 />
