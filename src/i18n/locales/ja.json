@@ -1,0 +1,99 @@
+{
+    "nav": {
+        "dashboard": "ダッシュボード",
+        "logout": "ログアウト",
+        "login": "ログイン",
+        "register": "無料登録"
+    },
+    "home": {
+        "badge": "スマートドメイン管理",
+        "title1": "簡単に管理する",
+        "title2": "すべてのドメイン",
+        "subtitle": "自動WHOIS検索、スマートな期限切れ通知、オールインワンのドメイン監視。ドメイン管理をシンプルかつエレガントに。",
+        "start_free": "無料で始める",
+        "login_existing": "ログイン",
+        "features_title": "パワフルで",
+        "features_title_highlight": "シンプル",
+        "features_title_after": "な",
+        "features_subtitle": "ドメイン投資家やウェブマスター向けのプロフェッショナル管理ツール",
+        "feature1_title": "自動WHOIS検索",
+        "feature1_desc": "ドメインを追加するだけで、レジストラ、登録日、有効期限を自動的に取得します。",
+        "feature2_title": "スマート通知",
+        "feature2_desc": "ドメインの状態を継続的に監視し、有効期限前に自動的に通知します。",
+        "feature3_title": "一元管理",
+        "feature3_desc": "すべてのドメインを集中的に表示します。各ドメインの状態をすばやく把握できます。",
+        "cta_title": "ドメイン管理を始める",
+        "cta_desc": "今すぐ無料登録して、スマートなドメイン管理を体験してください",
+        "cta_button": "今すぐ登録",
+        "footer_rights": "無断複写・転載を禁じます。"
+    },
+    "dashboard": {
+        "title": "ダッシュボード",
+        "add_domain": "ドメイン追加",
+        "total_domains": "ドメイン総数",
+        "expiring_soon": "まもなく期限切れ",
+        "normal": "正常",
+        "refresh_all": "すべて更新",
+        "search_placeholder": "すべてのドメインの管理と監視"
+    },
+    "domain_list": {
+        "domain": "ドメイン",
+        "registrar": "レジストラ",
+        "registration_date": "登録日",
+        "expiration_date": "有効期限",
+        "status": "状態",
+        "actions": "操作",
+        "no_domains": "ドメインがありません。追加して開始してください！",
+        "status_normal": "正常",
+        "status_expiring": "期限切れ間近",
+        "status_expired": "期限切れ",
+        "action_refresh": "更新",
+        "action_delete": "削除",
+        "delete_confirm": "このドメインを削除してもよろしいですか？",
+        "days_left": "残り {{days}} 日"
+    },
+    "add_domain_modal": {
+        "title": "ドメインの追加",
+        "desc": "管理するドメインを入力してください。WHOIS情報を自動的に取得します。",
+        "domain_label": "ドメイン名",
+        "domain_placeholder": "例: example.com",
+        "cancel": "キャンセル",
+        "submit": "追加する",
+        "submitting": "追加中...",
+        "error_empty": "ドメイン名を入力してください",
+        "error_invalid": "無効なドメイン形式です"
+    },
+    "prices": {
+        "title": "価格設定",
+        "subtitle": "各レジストラの異なるTLDの年間更新価格を設定します",
+        "add_rule": "価格ルールの追加",
+        "registrar_label": "レジストラ",
+        "registrar_placeholder": "例: Tencent, Aliyun (または「全部」ですべて)",
+        "tld_label": "TLD",
+        "tld_placeholder": "例: .com",
+        "price_label": "価格 (年間)",
+        "price_placeholder": "例: 65",
+        "save_rule": "ルールを保存",
+        "error_incomplete": "すべての項目を入力してください",
+        "delete_confirm": "この価格ルールを削除してもよろしいですか？",
+        "delete_error": "削除に失敗しました",
+        "no_rules": "価格ルールはまだありません",
+        "th_registrar": "レジストラ",
+        "th_tld": "TLD",
+        "th_price": "価格",
+        "th_action": "操作",
+        "all_registrars": "すべて"
+    },
+    "metadata": {
+        "title": "YouDoma - スマートドメイン管理",
+        "description": "すべてのドメインを簡単に管理し、自動WHOIS検索、期限切れ通知を備えたオールインワンのドメイン監視プラットフォーム。"
+    },
+    "common": {
+        "loading": "読み込み中...",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "error": "エラーが発生しました",
+        "success": "成功しました"
+    }
+}

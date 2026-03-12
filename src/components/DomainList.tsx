@@ -1,6 +1,8 @@
 "use client";
 
 import { Globe, Trash2, Calendar, Building2, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "@/i18n/client";
 
 interface Domain {
     id: string;
@@ -29,12 +31,8 @@ interface DomainListProps {
 }
 
 function formatDate(dateStr: string | null): string {
-    if (!dateStr) return "未知";
-    return new Date(dateStr).toLocaleDateString("zh-CN", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    });
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleDateString();
 }
 
 function getDaysUntilExpiry(dateStr: string | null): number | null {
@@ -43,41 +41,40 @@ function getDaysUntilExpiry(dateStr: string | null): number | null {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-function getStatusBadge(status: string | null, expiryDate: string | null) {
+function getStatusBadge(status: string | null, expiryDate: string | null, t: any) {
     const days = getDaysUntilExpiry(expiryDate);
 
     if (status === "expired" || (days !== null && days < 0)) {
         return (
             <span className="rounded-full bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400 border border-red-500/20">
-                已过期
+                {t("domain_list.status_expired")}
             </span>
         );
     }
     if (days !== null && days <= 30) {
         return (
             <span className="rounded-full bg-yellow-500/10 px-2.5 py-1 text-xs font-medium text-yellow-400 border border-yellow-500/20">
-                {days} 天后到期
+                {t("domain_list.days_left", { days })}
             </span>
         );
     }
     if (days !== null && days <= 90) {
         return (
             <span className="rounded-full bg-orange-500/10 px-2.5 py-1 text-xs font-medium text-orange-400 border border-orange-500/20">
-                {days} 天后到期
+                {t("domain_list.days_left", { days })}
             </span>
         );
     }
     return (
         <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400 border border-emerald-500/20">
-            正常
+            {t("domain_list.status_normal")}
         </span>
     );
 }
 
-import { useState } from "react";
-
 export default function DomainList({ domains, prices, onRefresh, onDelete, loading }: DomainListProps) {
     const [refreshingIds, setRefreshingIds] = useState<Set<string>>(new Set());
+    const { t } = useTranslation();
 
     const handleRefresh = async (id: string) => {
         try {
@@ -97,7 +94,7 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
         return (
             <div className="flex items-center justify-center py-20">
                 <RefreshCw className="h-6 w-6 animate-spin text-emerald-400" />
-                <span className="ml-3 text-gray-400">加载中...</span>
+                <span className="ml-3 text-gray-400">{t("common.loading")}</span>
             </div>
         );
     }
@@ -108,10 +105,12 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5">
                     <Globe className="h-8 w-8 text-gray-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-300">还没有域名</h3>
-                <p className="mt-2 text-sm text-gray-500">
-                    点击上方"添加域名"按钮开始管理你的域名
-                </p>
+                <h3 className="text-lg font-medium text-gray-300">{t("domain_list.no_domains").split("。")[0]}</h3>
+                {t("domain_list.no_domains").split("。")[1] && (
+                    <p className="mt-2 text-sm text-gray-500">
+                        {t("domain_list.no_domains").split("。")[1]}
+                    </p>
+                )}
             </div>
         );
     }
@@ -133,7 +132,7 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
                                     <h3 className="text-base font-semibold text-white truncate">
                                         {domain.name}
                                     </h3>
-                                    {getStatusBadge(domain.status, domain.expiryDate)}
+                                    {getStatusBadge(domain.status, domain.expiryDate, t)}
                                     {(() => {
                                         if (!prices) return null;
                                         const domainTld = "." + domain.name.split('.').slice(1).join('.').toLowerCase();
@@ -168,13 +167,13 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
                                     {domain.registeredDate && (
                                         <span className="flex items-center gap-1.5">
                                             <Calendar className="h-3.5 w-3.5 text-gray-500" />
-                                            注册：{formatDate(domain.registeredDate)}
+                                            {t("domain_list.registration_date")}：{formatDate(domain.registeredDate)}
                                         </span>
                                     )}
                                     {domain.expiryDate && (
                                         <span className="flex items-center gap-1.5">
                                             <Calendar className="h-3.5 w-3.5 text-gray-500" />
-                                            到期：{formatDate(domain.expiryDate)}
+                                            {t("domain_list.expiration_date")}：{formatDate(domain.expiryDate)}
                                         </span>
                                     )}
                                 </div>
@@ -186,14 +185,18 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
                                 onClick={() => handleRefresh(domain.id)}
                                 disabled={refreshingIds.has(domain.id)}
                                 className="rounded-lg p-2 text-gray-500 transition-all hover:bg-emerald-500/10 hover:text-emerald-400 disabled:opacity-50"
-                                title="更新 WHOIS 信息"
+                                title={t("domain_list.action_refresh")}
                             >
                                 <RefreshCw className={`h-4 w-4 ${refreshingIds.has(domain.id) ? "animate-spin text-emerald-400" : ""}`} />
                             </button>
                             <button
-                                onClick={() => onDelete(domain.id)}
+                                onClick={() => {
+                                    if (confirm(t("domain_list.delete_confirm"))) {
+                                        onDelete(domain.id);
+                                    }
+                                }}
                                 className="rounded-lg p-2 text-gray-500 transition-all hover:bg-red-500/10 hover:text-red-400"
-                                title="删除域名"
+                                title={t("domain_list.action_delete")}
                             >
                                 <Trash2 className="h-4 w-4" />
                             </button>

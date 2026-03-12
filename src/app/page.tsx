@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { Globe, Search, Bell, Shield, ArrowRight, Sparkles } from "lucide-react";
+import { getDictionary } from "@/i18n/server";
 
-export default function Home() {
+export default async function Home() {
+  const dict = await getDictionary();
+  const t = dict.home;
+
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-32 pb-20">
-        {/* Background glow effects */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[120px]" />
           <div className="absolute top-1/3 left-1/3 h-[300px] w-[300px] rounded-full bg-green-500/8 blur-[100px] animate-glow" />
@@ -17,20 +20,19 @@ export default function Home() {
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-400">
               <Sparkles className="h-4 w-4" />
-              智能域名管理平台
+              {t.badge}
             </div>
 
             {/* Heading */}
             <h1 className="max-w-4xl text-5xl font-bold leading-tight tracking-tight text-white md:text-7xl">
-              轻松掌控
+              {t.title1}
               <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
-                {" "}每一个域名
+                {" "}{t.title2}
               </span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-400 md:text-xl">
-              自动 WHOIS 查询、到期智能提醒、一站式域名监控。
-              让域名管理变得简单而优雅。
+              {t.subtitle}
             </p>
 
             {/* CTA Buttons */}
@@ -39,14 +41,14 @@ export default function Home() {
                 href="/register"
                 className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-8 py-3.5 text-base font-semibold text-white shadow-xl shadow-green-500/25 transition-all hover:shadow-green-500/40 hover:brightness-110"
               >
-                免费开始使用
+                {t.start_free}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/login"
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-8 py-3.5 text-base font-medium text-gray-300 transition-all hover:border-white/20 hover:bg-white/5"
               >
-                已有账号？登录
+                {t.login_existing}
               </Link>
             </div>
           </div>
@@ -55,7 +57,6 @@ export default function Home() {
           <div className="relative mx-auto mt-20 max-w-4xl">
             <div className="glass-card rounded-2xl p-1">
               <div className="rounded-xl bg-gray-900/80 p-6">
-                {/* Mock header bar */}
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full bg-red-500/60" />
@@ -65,7 +66,6 @@ export default function Home() {
                   <div className="h-6 w-48 rounded-md bg-white/5" />
                   <div className="h-6 w-6" />
                 </div>
-                {/* Mock domain rows */}
                 {["example.com", "mysite.cn", "startup.io"].map((d, i) => (
                   <div
                     key={d}
@@ -78,22 +78,19 @@ export default function Home() {
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="text-xs text-gray-500">
-                        到期：2025-{12 - i * 3}-01
+                        2025-{12 - i * 3}-01
                       </span>
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${i === 0
-                          ? "bg-emerald-500/10 text-emerald-400"
-                          : i === 1
-                            ? "bg-yellow-500/10 text-yellow-400"
-                            : "bg-emerald-500/10 text-emerald-400"
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${i === 1
+                        ? "bg-yellow-500/10 text-yellow-400"
+                        : "bg-emerald-500/10 text-emerald-400"
                         }`}>
-                        {i === 1 ? "即将到期" : "正常"}
+                        {i === 1 ? dict.dashboard.expiring_soon : dict.dashboard.normal}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            {/* Gradient overlay at bottom */}
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-gray-950 to-transparent" />
           </div>
         </div>
@@ -104,10 +101,11 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold text-white md:text-4xl">
-              强大而<span className="text-emerald-400">简洁</span>的功能
+              {t.features_title}<span className="text-emerald-400">{t.features_title_highlight}</span>
+              {" "}{(dict.home as any)["features_title_after"] || ""}
             </h2>
             <p className="mt-4 text-gray-400">
-              为域名投资者和站长打造的专业管理工具
+              {t.features_subtitle}
             </p>
           </div>
 
@@ -115,18 +113,18 @@ export default function Home() {
             {[
               {
                 icon: Search,
-                title: "自动 WHOIS 查询",
-                desc: "添加域名即自动获取注册商、注册时间、到期时间等完整信息，无需手动查询。",
+                title: t.feature1_title,
+                desc: t.feature1_desc,
               },
               {
                 icon: Bell,
-                title: "到期智能提醒",
-                desc: "系统持续监控域名状态，到期前自动提醒，再也不会错过续费时间。",
+                title: t.feature2_title,
+                desc: t.feature2_desc,
               },
               {
                 icon: Shield,
-                title: "一站式管理",
-                desc: "集中管理所有域名，清晰的列表视图，快速掌握每个域名的状态和信息。",
+                title: t.feature3_title,
+                desc: t.feature3_desc,
               },
             ].map((feature) => (
               <div
@@ -158,16 +156,16 @@ export default function Home() {
             </div>
             <div className="relative">
               <h2 className="text-3xl font-bold text-white md:text-4xl">
-                开始管理你的域名
+                {t.cta_title}
               </h2>
               <p className="mt-4 text-gray-400">
-                免费注册，立即体验智能域名管理
+                {t.cta_desc}
               </p>
               <Link
                 href="/register"
                 className="mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-8 py-3.5 text-base font-semibold text-white shadow-xl shadow-green-500/25 transition-all hover:shadow-green-500/40 hover:brightness-110"
               >
-                立即注册
+                {t.cta_button}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -186,7 +184,7 @@ export default function Home() {
               </span>
             </div>
             <p className="text-sm text-gray-500">
-              © 2025 YouDoma. All rights reserved.
+              © 2025 YouDoma. {t.footer_rights}
             </p>
           </div>
         </div>

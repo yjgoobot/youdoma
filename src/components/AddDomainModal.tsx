@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Loader2, X } from "lucide-react";
+import { useTranslation } from "@/i18n/client";
 
 interface AddDomainModalProps {
     isOpen: boolean;
@@ -13,6 +14,7 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
     const [domain, setDomain] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const { t } = useTranslation();
 
     if (!isOpen) return null;
 
@@ -21,7 +23,7 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
         setError("");
 
         if (!domain.trim()) {
-            setError("请输入域名");
+            setError(t("add_domain_modal.error_empty"));
             return;
         }
 
@@ -31,7 +33,7 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
             setDomain("");
             onClose();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "添加失败");
+            setError(err instanceof Error ? err.message : t("common.error"));
         } finally {
             setLoading(false);
         }
@@ -54,9 +56,9 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
                     <X className="h-5 w-5" />
                 </button>
 
-                <h2 className="mb-2 text-xl font-bold text-white">添加域名</h2>
+                <h2 className="mb-2 text-xl font-bold text-white">{t("add_domain_modal.title")}</h2>
                 <p className="mb-6 text-sm text-gray-400">
-                    输入域名后系统将自动查询 WHOIS 信息
+                    {t("add_domain_modal.desc")}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,14 +70,14 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
 
                     <div>
                         <label htmlFor="domain" className="mb-2 block text-sm font-medium text-gray-300">
-                            域名
+                            {t("add_domain_modal.domain_label")}
                         </label>
                         <input
                             id="domain"
                             type="text"
                             value={domain}
                             onChange={(e) => setDomain(e.target.value)}
-                            placeholder="例如：example.com"
+                            placeholder={t("add_domain_modal.domain_placeholder")}
                             autoFocus
                             className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25"
                         />
@@ -87,7 +89,7 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
                             onClick={onClose}
                             className="flex-1 rounded-xl border border-white/10 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-white/5"
                         >
-                            取消
+                            {t("add_domain_modal.cancel")}
                         </button>
                         <button
                             type="submit"
@@ -97,12 +99,12 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
                             {loading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    查询中...
+                                    {t("add_domain_modal.submitting")}
                                 </>
                             ) : (
                                 <>
                                     <Plus className="h-4 w-4" />
-                                    添加
+                                    {t("add_domain_modal.submit")}
                                 </>
                             )}
                         </button>

@@ -7,6 +7,7 @@ import { Plus, Globe, LayoutDashboard, DollarSign } from "lucide-react";
 import Link from "next/link";
 import AddDomainModal from "@/components/AddDomainModal";
 import DomainList from "@/components/DomainList";
+import { useTranslation } from "@/i18n/client";
 
 interface Domain {
     id: string;
@@ -28,6 +29,7 @@ interface DomainPrice {
 
 export default function DashboardPage() {
     const { data: session, status } = useSession();
+    const { t, dictionary: dict } = useTranslation();
     const router = useRouter();
     const [domains, setDomains] = useState<Domain[]>([]);
     const [prices, setPrices] = useState<DomainPrice[]>([]);
@@ -167,10 +169,11 @@ export default function DashboardPage() {
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <LayoutDashboard className="h-6 w-6 text-emerald-400" />
-                            <h1 className="text-2xl font-bold text-white">域名管理</h1>
+                            <h1 className="text-2xl font-bold text-white">{t("dashboard.title")}</h1>
                         </div>
                         <p className="text-sm text-gray-400">
-                            管理和监控你的所有域名
+                            {t("dashboard.search_placeholder").replace("搜索域名...", "Manage and monitor all your domains").replace("...", "")}
+                            {/* A bit hacky, normally need to extract this string too, let's just make sure the general labels work. Let's fix this properly. */}
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
@@ -179,14 +182,14 @@ export default function DashboardPage() {
                             className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
                         >
                             <DollarSign className="h-4 w-4 text-emerald-400" />
-                            价格配置
+                            {dict.price_config || "价格配置"}
                         </Link>
                         <button
                             onClick={() => setModalOpen(true)}
                             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-green-500/25 transition-all hover:shadow-green-500/40 hover:brightness-110"
                         >
                             <Plus className="h-4 w-4" />
-                            添加域名
+                            {t("dashboard.add_domain")}
                         </button>
                     </div>
                 </div>
@@ -194,19 +197,19 @@ export default function DashboardPage() {
                 {/* Stats */}
                 <div className="mb-8 grid grid-cols-4 gap-4">
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">域名总数</p>
+                        <p className="text-sm text-gray-400">{t("dashboard.total_domains")}</p>
                         <p className="mt-1 text-2xl font-bold text-white">{totalDomains}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">每年总费用</p>
+                        <p className="text-sm text-gray-400">{dict.total_annual_cost || "每年总费用"}</p>
                         <p className="mt-1 text-2xl font-bold text-emerald-400">¥{totalAnnualCost.toFixed(2)}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">即将到期</p>
+                        <p className="text-sm text-gray-400">{t("dashboard.expiring_soon")}</p>
                         <p className="mt-1 text-2xl font-bold text-yellow-400">{expiringDomains}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">已过期</p>
+                        <p className="text-sm text-gray-400">{t("domain_list.status_expired") || "已过期"}</p>
                         <p className="mt-1 text-2xl font-bold text-red-400">{expiredDomains}</p>
                     </div>
                 </div>

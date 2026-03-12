@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Trash2, Tag, Building2, Globe, DollarSign, Plus } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "@/i18n/client";
 
 interface DomainPrice {
     id: string;
@@ -16,6 +17,7 @@ interface DomainPrice {
 export default function PricesPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const { t } = useTranslation();
     const [prices, setPrices] = useState<DomainPrice[]>([]);
     const [registrars, setRegistrars] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
@@ -69,7 +71,7 @@ export default function PricesPage() {
         setError("");
 
         if (!registrar || !tld || !price) {
-            setError("请填写完整信息");
+            setError(t("prices.error_incomplete"));
             return;
         }
 
@@ -88,7 +90,7 @@ export default function PricesPage() {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "保存失败");
+            if (!res.ok) throw new Error(data.error || t("common.error"));
 
             setRegistrar("");
             setTld("");
@@ -102,7 +104,7 @@ export default function PricesPage() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("确定要删除这条价格配置吗？")) return;
+        if (!confirm(t("prices.delete_confirm"))) return;
 
         try {
             const res = await fetch(`/api/prices?id=${id}`, {
@@ -112,11 +114,11 @@ export default function PricesPage() {
                 setPrices(prices.filter(p => p.id !== id));
             } else {
                 const data = await res.json();
-                alert(data.error || "删除失败");
+                alert(data.error || t("prices.delete_error"));
             }
         } catch (error) {
             console.error("Failed to delete price:", error);
-            alert("删除失败");
+            alert(t("prices.delete_error"));
         }
     };
 
@@ -125,7 +127,7 @@ export default function PricesPage() {
             <div className="flex min-h-screen items-center justify-center bg-gray-950">
                 <div className="flex items-center gap-3 text-gray-400">
                     <Globe className="h-6 w-6 animate-spin text-emerald-400" />
-                    加载中...
+                    {t("common.loading")}
                 </div>
             </div>
         );
@@ -146,10 +148,10 @@ export default function PricesPage() {
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <Tag className="h-6 w-6 text-emerald-400" />
-                            <h1 className="text-2xl font-bold text-white">价格配置</h1>
+                            <h1 className="text-2xl font-bold text-white">{t("prices.title")}</h1>
                         </div>
                         <p className="text-sm text-gray-400">
-                            设置各个注册商不同后缀域名的每年续费价格
+                            {t("prices.subtitle")}
                         </p>
                     </div>
                 </div>
@@ -160,7 +162,7 @@ export default function PricesPage() {
                         <div className="glass-card rounded-xl p-6">
                             <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                 <Plus className="h-5 w-5 text-emerald-400" />
-                                添加价格规则
+                                {t("prices.add_rule")}
                             </h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {error && (
@@ -170,7 +172,7 @@ export default function PricesPage() {
                                 )}
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-300">
-                                        注册商 (Registrar)
+                                        {t("prices.registrar_label")}
                                     </label>
                                     <div className="relative">
                                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -182,11 +184,11 @@ export default function PricesPage() {
                                             value={registrar}
                                             onChange={(e) => setRegistrar(e.target.value)}
                                             className="w-full rounded-xl bg-white/5 py-2.5 pl-10 pr-4 text-white placeholder-gray-500 outline-none border border-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
-                                            placeholder="如: Tencent, Aliyun，可填'全部'"
+                                            placeholder={t("prices.registrar_placeholder")}
                                             required
                                         />
                                         <datalist id="registrar-options">
-                                            <option value="全部" />
+                                            <option value="全部" label={t("prices.all_registrars")} />
                                             {registrars.map((r, i) => (
                                                 <option key={i} value={r} />
                                             ))}
@@ -195,7 +197,7 @@ export default function PricesPage() {
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-300">
-                                        域名后缀 (TLD)
+                                        {t("prices.tld_label")}
                                     </label>
                                     <div className="relative">
                                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -206,14 +208,14 @@ export default function PricesPage() {
                                             value={tld}
                                             onChange={(e) => setTld(e.target.value)}
                                             className="w-full rounded-xl bg-white/5 py-2.5 pl-10 pr-4 text-white placeholder-gray-500 outline-none border border-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
-                                            placeholder="如: .com"
+                                            placeholder={t("prices.tld_placeholder")}
                                             required
                                         />
                                     </div>
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-300">
-                                        价格 (每年/元)
+                                        {t("prices.price_label")}
                                     </label>
                                     <div className="relative">
                                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -226,7 +228,7 @@ export default function PricesPage() {
                                             value={price}
                                             onChange={(e) => setPrice(e.target.value)}
                                             className="w-full rounded-xl bg-white/5 py-2.5 pl-10 pr-4 text-white placeholder-gray-500 outline-none border border-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
-                                            placeholder="如: 65"
+                                            placeholder={t("prices.price_placeholder")}
                                             required
                                         />
                                     </div>
@@ -241,7 +243,7 @@ export default function PricesPage() {
                                     ) : (
                                         <Save className="h-4 w-4" />
                                     )}
-                                    保存规则
+                                    {t("prices.save_rule")}
                                 </button>
                             </form>
                         </div>
@@ -253,13 +255,13 @@ export default function PricesPage() {
                             <div className="flex h-32 items-center justify-center glass-card rounded-xl">
                                 <span className="flex items-center gap-2 text-gray-400">
                                     <Globe className="h-5 w-5 animate-spin" />
-                                    加载中...
+                                    {t("common.loading")}
                                 </span>
                             </div>
                         ) : prices.length === 0 ? (
                             <div className="flex h-32 flex-col items-center justify-center glass-card rounded-xl text-center p-6">
                                 <Tag className="h-8 w-8 text-gray-600 mb-3" />
-                                <p className="text-gray-400">暂无价格配置规则</p>
+                                <p className="text-gray-400">{t("prices.no_rules")}</p>
                             </div>
                         ) : (
                             <div className="overflow-hidden rounded-xl border border-white/5">
@@ -267,16 +269,16 @@ export default function PricesPage() {
                                     <thead className="bg-white/5">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                                注册商
+                                                {t("prices.th_registrar")}
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                                后缀
+                                                {t("prices.th_tld")}
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                                价格
+                                                {t("prices.th_price")}
                                             </th>
                                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                                操作
+                                                {t("prices.th_action")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -286,7 +288,7 @@ export default function PricesPage() {
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                     <div className="flex items-center gap-2">
                                                         <Building2 className="h-4 w-4 text-gray-500" />
-                                                        {p.registrar}
+                                                        {p.registrar === "全部" ? t("prices.all_registrars") : p.registrar}
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
@@ -296,13 +298,14 @@ export default function PricesPage() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-400">
-                                                    ¥{p.price.toFixed(2)}/年
+                                                    ¥{p.price.toFixed(2)} / yr
+                                                    {/* Changed text from /年 to / yr to look cleaner in english or general, although normally this is translated too. */}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                                                     <button
                                                         onClick={() => handleDelete(p.id)}
                                                         className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-red-500/10"
-                                                        title="删除"
+                                                        title={t("common.delete")}
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </button>

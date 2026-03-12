@@ -1,0 +1,99 @@
+{
+    "nav": {
+        "dashboard": "控制台",
+        "logout": "退出",
+        "login": "登录",
+        "register": "免费注册"
+    },
+    "home": {
+        "badge": "智能域名管理平台",
+        "title1": "轻松掌控",
+        "title2": "每一个域名",
+        "subtitle": "自动 WHOIS 查询、到期智能提醒、一站式域名监控。让域名管理变得简单而优雅。",
+        "start_free": "免费开始使用",
+        "login_existing": "已有账号？登录",
+        "features_title": "强大而",
+        "features_title_highlight": "简洁",
+        "features_title_after": "的",
+        "features_subtitle": "为域名投资者和站长打造的专业管理工具",
+        "feature1_title": "自动 WHOIS 查询",
+        "feature1_desc": "添加域名即自动获取注册商、注册时间、到期时间等完整信息，无需手动查询。",
+        "feature2_title": "到期智能提醒",
+        "feature2_desc": "系统持续监控域名状态，到期前自动提醒，再也不会错过续费时间。",
+        "feature3_title": "一站式管理",
+        "feature3_desc": "集中管理所有域名，清晰的列表视图，快速掌握每个域名的状态和信息。",
+        "cta_title": "开始管理你的域名",
+        "cta_desc": "免费注册，立即体验智能域名管理",
+        "cta_button": "立即注册",
+        "footer_rights": "版权所有。"
+    },
+    "dashboard": {
+        "title": "控制台",
+        "add_domain": "添加域名",
+        "total_domains": "域名总数",
+        "expiring_soon": "即将到期",
+        "normal": "状态正常",
+        "refresh_all": "全部刷新",
+        "search_placeholder": "管理和监控你的所有域名"
+    },
+    "domain_list": {
+        "domain": "域名",
+        "registrar": "注册商",
+        "registration_date": "注册时间",
+        "expiration_date": "到期时间",
+        "status": "状态",
+        "actions": "操作",
+        "no_domains": "暂无域名，请点击上方按钮添加。由于拉取信息稍慢，请耐心等待！",
+        "status_normal": "正常",
+        "status_expiring": "即将到期",
+        "status_expired": "已过期",
+        "action_refresh": "刷新",
+        "action_delete": "删除",
+        "delete_confirm": "确定要删除这个域名吗？",
+        "days_left": "剩 {{days}} 天"
+    },
+    "add_domain_modal": {
+        "title": "添加域名",
+        "desc": "输入你要管理的域名，系统会自动获取 WHOIS 信息。",
+        "domain_label": "域名",
+        "domain_placeholder": "例如: example.com",
+        "cancel": "取消",
+        "submit": "添加",
+        "submitting": "添加中...",
+        "error_empty": "请输入域名",
+        "error_invalid": "域名格式不正确"
+    },
+    "prices": {
+        "title": "价格配置",
+        "subtitle": "设置各个注册商不同后缀域名的每年续费价格",
+        "add_rule": "添加价格规则",
+        "registrar_label": "注册商 (Registrar)",
+        "registrar_placeholder": "如: Tencent, Aliyun，可填'全部'",
+        "tld_label": "域名后缀 (TLD)",
+        "tld_placeholder": "如: .com",
+        "price_label": "价格 (每年/元)",
+        "price_placeholder": "如: 65",
+        "save_rule": "保存规则",
+        "error_incomplete": "请填写完整信息",
+        "delete_confirm": "确定要删除这条价格配置吗？",
+        "delete_error": "删除失败",
+        "no_rules": "暂无价格配置规则",
+        "th_registrar": "注册商",
+        "th_tld": "后缀",
+        "th_price": "价格",
+        "th_action": "操作",
+        "all_registrars": "全部"
+    },
+    "metadata": {
+        "title": "YouDoma - 智能域名管理",
+        "description": "轻松管理你的所有域名，自动 WHOIS 查询，到期提醒，一站式域名监控平台。"
+    },
+    "common": {
+        "loading": "加载中...",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除",
+        "error": "发生错误",
+        "success": "操作成功"
+    }
+}
