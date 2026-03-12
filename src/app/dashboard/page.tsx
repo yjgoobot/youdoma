@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Plus, Globe, LayoutDashboard } from "lucide-react";
+import { Plus, Globe, LayoutDashboard, DollarSign } from "lucide-react";
+import Link from "next/link";
 import AddDomainModal from "@/components/AddDomainModal";
 import DomainList from "@/components/DomainList";
 
@@ -18,10 +19,18 @@ interface Domain {
     createdAt: string;
 }
 
+interface DomainPrice {
+    id: string;
+    registrar: string;
+    tld: string;
+    price: number;
+}
+
 export default function DashboardPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [domains, setDomains] = useState<Domain[]>([]);
+    const [prices, setPrices] = useState<DomainPrice[]>([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -32,17 +41,24 @@ export default function DashboardPage() {
         }
     }, [status, router]);
 
-    // Fetch domains
-    const fetchDomains = useCallback(async () => {
+    // Fetch domains and prices
+    const fetchDomainsAndPrices = useCallback(async () => {
         try {
             setLoading(true);
-            const res = await fetch("/api/domains");
-            if (res.ok) {
-                const data = await res.json();
+            const [domainsRes, pricesRes] = await Promise.all([
+                fetch("/api/domains"),
+                fetch("/api/prices")
+            ]);
+            if (domainsRes.ok) {
+                const data = await domainsRes.json();
                 setDomains(data);
             }
+            if (pricesRes.ok) {
+                const data = await pricesRes.json();
+                setPrices(data);
+            }
         } catch (error) {
-            console.error("Failed to fetch domains:", error);
+            console.error("Failed to fetch domains and prices:", error);
         } finally {
             setLoading(false);
         }
@@ -50,9 +66,9 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (status === "authenticated") {
-            fetchDomains();
+            fetchDomainsAndPrices();
         }
-    }, [status, fetchDomains]);
+    }, [status, fetchDomainsAndPrices]);
 
     // Add domain
     const handleAddDomain = async (domainName: string) => {
@@ -123,6 +139,26 @@ export default function DashboardPage() {
         return new Date(d.expiryDate).getTime() < Date.now();
     }).length;
 
+    const totalAnnualCost = domains.reduce((sum, domain) => {
+        const domainTld = "." + domain.name.split('.').slice(1).join('.').toLowerCase();
+
+        // 1. Try to find exact match for registrar and TLD
+        const exactMatches = prices.filter(
+            p => domain.registrar && p.registrar.toLowerCase() === domain.registrar.toLowerCase() && domainTld.endsWith(p.tld.toLowerCase())
+        );
+        let bestRule = exactMatches.sort((a, b) => b.tld.length - a.tld.length)[0];
+
+        // 2. If no exact match, try to find "全部" fallback for the TLD
+        if (!bestRule) {
+            const fallbackMatches = prices.filter(
+                p => p.registrar === "全部" && domainTld.endsWith(p.tld.toLowerCase())
+            );
+            bestRule = fallbackMatches.sort((a, b) => b.tld.length - a.tld.length)[0];
+        }
+
+        return sum + (bestRule ? bestRule.price : 0);
+    }, 0);
+
     return (
         <div className="min-h-screen bg-gray-950 pt-24 pb-12">
             <div className="mx-auto max-w-5xl px-6">
@@ -137,20 +173,33 @@ export default function DashboardPage() {
                             管理和监控你的所有域名
                         </p>
                     </div>
-                    <button
-                        onClick={() => setModalOpen(true)}
-                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-green-500/25 transition-all hover:shadow-green-500/40 hover:brightness-110"
-                    >
-                        <Plus className="h-4 w-4" />
-                        添加域名
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href="/dashboard/prices"
+                            className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                        >
+                            <DollarSign className="h-4 w-4 text-emerald-400" />
+                            价格配置
+                        </Link>
+                        <button
+                            onClick={() => setModalOpen(true)}
+                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-green-500/25 transition-all hover:shadow-green-500/40 hover:brightness-110"
+                        >
+                            <Plus className="h-4 w-4" />
+                            添加域名
+                        </button>
+                    </div>
                 </div>
 
                 {/* Stats */}
-                <div className="mb-8 grid grid-cols-3 gap-4">
+                <div className="mb-8 grid grid-cols-4 gap-4">
                     <div className="glass-card rounded-xl p-5">
                         <p className="text-sm text-gray-400">域名总数</p>
                         <p className="mt-1 text-2xl font-bold text-white">{totalDomains}</p>
+                    </div>
+                    <div className="glass-card rounded-xl p-5">
+                        <p className="text-sm text-gray-400">每年总费用</p>
+                        <p className="mt-1 text-2xl font-bold text-emerald-400">¥{totalAnnualCost.toFixed(2)}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
                         <p className="text-sm text-gray-400">即将到期</p>
@@ -165,6 +214,7 @@ export default function DashboardPage() {
                 {/* Domain List */}
                 <DomainList
                     domains={domains}
+                    prices={prices}
                     onRefresh={handleRefreshDomain}
                     onDelete={handleDeleteDomain}
                     loading={loading}

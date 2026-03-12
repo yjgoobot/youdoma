@@ -44,6 +44,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   domains       Domain[]
+  domainPrices  DomainPrice[]
 }
 
 model VerificationToken {
@@ -70,5 +71,19 @@ model Domain {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  @@index([userId])
+}
+
+model DomainPrice {
+  id        String   @id @default(cuid())
+  registrar String
+  tld       String
+  price     Float
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, registrar, tld])
   @@index([userId])
 }

@@ -13,8 +13,16 @@ interface Domain {
     createdAt: string;
 }
 
+interface DomainPrice {
+    id: string;
+    registrar: string;
+    tld: string;
+    price: number;
+}
+
 interface DomainListProps {
     domains: Domain[];
+    prices?: DomainPrice[];
     onRefresh: (id: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     loading: boolean;
@@ -68,7 +76,7 @@ function getStatusBadge(status: string | null, expiryDate: string | null) {
 
 import { useState } from "react";
 
-export default function DomainList({ domains, onRefresh, onDelete, loading }: DomainListProps) {
+export default function DomainList({ domains, prices, onRefresh, onDelete, loading }: DomainListProps) {
     const [refreshingIds, setRefreshingIds] = useState<Set<string>>(new Set());
 
     const handleRefresh = async (id: string) => {
@@ -126,6 +134,29 @@ export default function DomainList({ domains, onRefresh, onDelete, loading }: Do
                                         {domain.name}
                                     </h3>
                                     {getStatusBadge(domain.status, domain.expiryDate)}
+                                    {(() => {
+                                        if (!prices) return null;
+                                        const domainTld = "." + domain.name.split('.').slice(1).join('.').toLowerCase();
+
+                                        const exactMatches = prices.filter(
+                                            p => domain.registrar && p.registrar.toLowerCase() === domain.registrar.toLowerCase() && domainTld.endsWith(p.tld.toLowerCase())
+                                        );
+                                        let bestRule = exactMatches.sort((a, b) => b.tld.length - a.tld.length)[0];
+
+                                        if (!bestRule) {
+                                            const fallbackMatches = prices.filter(
+                                                p => p.registrar === "全部" && domainTld.endsWith(p.tld.toLowerCase())
+                                            );
+                                            bestRule = fallbackMatches.sort((a, b) => b.tld.length - a.tld.length)[0];
+                                        }
+
+                                        if (!bestRule) return null;
+                                        return (
+                                            <span className="rounded-full bg-blue-500/10 px-2.5 py-1 text-xs font-medium text-blue-400 border border-blue-500/20">
+                                                ¥{bestRule.price.toFixed(2)}/年
+                                            </span>
+                                        );
+                                    })()}
                                 </div>
                                 <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-gray-400">
                                     {domain.registrar && (
