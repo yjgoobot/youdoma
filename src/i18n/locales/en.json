@@ -54,14 +54,17 @@
     },
     "add_domain_modal": {
         "title": "Add New Domain",
-        "desc": "Enter the domain name to manage. We'll automatically fetch its WHOIS information.",
-        "domain_label": "Domain Name",
-        "domain_placeholder": "e.g., example.com",
+        "desc": "Enter the domain names to manage (one per line). We'll automatically fetch their WHOIS information.",
+        "domain_label": "Domain Names",
+        "domain_placeholder": "example.com\nexample.net",
         "cancel": "Cancel",
-        "submit": "Add Domain",
+        "submit": "Add Domains",
         "submitting": "Adding...",
-        "error_empty": "Please enter a domain name",
-        "error_invalid": "Invalid domain format"
+        "error_empty": "Please enter at least one domain name",
+        "error_invalid": "Invalid domain format",
+        "progress": "Processing Domain {{current}} of {{total}}",
+        "success_msg": "Successfully added {{success}} domains.",
+        "error_msg": "Failed to add {{error}} domains. Please check the formats or if they already exist."
     },
     "prices": {
         "title": "Price Configuration",

@@ -54,14 +54,17 @@
     },
     "add_domain_modal": {
         "title": "ドメインの追加",
-        "desc": "管理するドメインを入力してください。WHOIS情報を自動的に取得します。",
+        "desc": "管理するドメインを入力してください（1行に1つ）。WHOIS情報を自動的に取得します。",
         "domain_label": "ドメイン名",
-        "domain_placeholder": "例: example.com",
+        "domain_placeholder": "example.com\nexample.net",
         "cancel": "キャンセル",
         "submit": "追加する",
         "submitting": "追加中...",
         "error_empty": "ドメイン名を入力してください",
-        "error_invalid": "無効なドメイン形式です"
+        "error_invalid": "無効なドメイン形式です",
+        "progress": "{{total}}件中{{current}}件目のドメインを処理中",
+        "success_msg": "{{success}}件のドメインを追加しました。",
+        "error_msg": "{{error}}件のドメインの追加に失敗しました。形式や既に存在していないか確認してください。"
     },
     "prices": {
         "title": "価格設定",

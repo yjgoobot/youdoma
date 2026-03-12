@@ -11,9 +11,10 @@ interface AddDomainModalProps {
 }
 
 export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModalProps) {
-    const [domain, setDomain] = useState("");
+    const [domainInput, setDomainInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [progress, setProgress] = useState({ current: 0, total: 0, success: 0, error: 0 });
     const { t } = useTranslation();
 
     if (!isOpen) return null;
@@ -21,21 +22,49 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setProgress({ current: 0, total: 0, success: 0, error: 0 });
 
-        if (!domain.trim()) {
+        if (!domainInput.trim()) {
+            setError(t("add_domain_modal.error_empty"));
+            return;
+        }
+
+        const domains = domainInput
+            .split("\n")
+            .map((d) => d.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, ""))
+            .filter((d) => d.length > 0);
+
+        if (domains.length === 0) {
             setError(t("add_domain_modal.error_empty"));
             return;
         }
 
         setLoading(true);
-        try {
-            await onAdd(domain.trim());
-            setDomain("");
+        let successCount = 0;
+        let errorCount = 0;
+
+        setProgress({ current: 0, total: domains.length, success: 0, error: 0 });
+
+        for (let i = 0; i < domains.length; i++) {
+            setProgress((prev) => ({ ...prev, current: i + 1 }));
+            try {
+                await onAdd(domains[i]);
+                successCount++;
+            } catch (err) {
+                console.error(`Failed to add ${domains[i]}:`, err);
+                errorCount++;
+            }
+            setProgress((prev) => ({ ...prev, success: successCount, error: errorCount }));
+        }
+
+        setLoading(false);
+
+        if (errorCount === 0) {
+            setDomainInput("");
+            setProgress({ current: 0, total: 0, success: 0, error: 0 });
             onClose();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t("common.error"));
-        } finally {
-            setLoading(false);
+        } else {
+            setError(t("add_domain_modal.error_msg").replace("{{error}}", errorCount.toString()));
         }
     };
 
@@ -68,18 +97,27 @@ export default function AddDomainModal({ isOpen, onClose, onAdd }: AddDomainModa
                         </div>
                     )}
 
+                    {progress.total > 0 && (
+                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400 space-y-1">
+                            <p>{t("add_domain_modal.progress").replace("{{current}}", progress.current.toString()).replace("{{total}}", progress.total.toString())}</p>
+                            {progress.success > 0 && <p className="text-emerald-300">{t("add_domain_modal.success_msg").replace("{{success}}", progress.success.toString())}</p>}
+                            {progress.error > 0 && <p className="text-red-300">{t("add_domain_modal.error_msg").replace("{{error}}", progress.error.toString())}</p>}
+                        </div>
+                    )}
+
                     <div>
                         <label htmlFor="domain" className="mb-2 block text-sm font-medium text-gray-300">
                             {t("add_domain_modal.domain_label")}
                         </label>
-                        <input
+                        <textarea
                             id="domain"
-                            type="text"
-                            value={domain}
-                            onChange={(e) => setDomain(e.target.value)}
+                            value={domainInput}
+                            onChange={(e) => setDomainInput(e.target.value)}
                             placeholder={t("add_domain_modal.domain_placeholder")}
                             autoFocus
-                            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25"
+                            rows={4}
+                            disabled={loading}
+                            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25 disabled:opacity-50"
                         />
                     </div>
 
