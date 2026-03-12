@@ -152,7 +152,7 @@ export default function DomainList({ domains, prices, onRefresh, onDelete, loadi
                                         if (!bestRule) return null;
                                         return (
                                             <span className="rounded-full bg-blue-500/10 px-2.5 py-1 text-xs font-medium text-blue-400 border border-blue-500/20">
-                                                ¥{bestRule.price.toFixed(2)}/年
+                                                ¥{bestRule.price.toFixed(2)} / {t("prices.year")}
                                             </span>
                                         );
                                     })()}

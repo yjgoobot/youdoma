@@ -34,7 +34,8 @@
         "expiring_soon": "即将到期",
         "normal": "状态正常",
         "refresh_all": "全部刷新",
-        "search_placeholder": "管理和监控你的所有域名"
+        "search_placeholder": "管理和监控你的所有域名",
+        "total_annual_cost": "每年总费用"
     },
     "domain_list": {
         "domain": "域名",
@@ -85,7 +86,8 @@
         "th_tld": "后缀",
         "th_price": "价格",
         "th_action": "操作",
-        "all_registrars": "全部"
+        "all_registrars": "全部",
+        "year": "年"
     },
     "metadata": {
         "title": "YouDoma - 智能域名管理",
@@ -98,5 +100,57 @@
         "delete": "删除",
         "error": "发生错误",
         "success": "操作成功"
+    },
+    "auth": {
+        "login_title": "欢迎回来",
+        "login_subtitle": "登录你的账号继续管理域名",
+        "email": "邮箱地址",
+        "email_placeholder": "you@example.com",
+        "password": "密码",
+        "password_placeholder_login": "输入你的密码",
+        "logging_in": "登录中...",
+        "login_button": "登录",
+        "no_account": "还没有账号？",
+        "register_free": "免费注册",
+        "register_title": "创建账号",
+        "register_subtitle": "注册后即可开始管理你的域名",
+        "username": "用户名",
+        "username_placeholder": "你的名字",
+        "password_placeholder_register": "至少 6 个字符",
+        "confirm_password": "确认密码",
+        "confirm_password_placeholder": "再次输入密码",
+        "registering": "注册中...",
+        "register_button": "创建账号",
+        "has_account": "已有账号？",
+        "login_now": "立即登录"
+    },
+    "auth_errors": {
+        "email_password_empty": "请输入邮箱和密码",
+        "email_password_wrong": "邮箱或密码错误",
+        "passwords_mismatch": "两次输入的密码不一致",
+        "password_too_short": "密码至少需要 6 个字符",
+        "register_failed": "注册失败，请重试",
+        "register_error": "注册时发生错误，请重试",
+        "login_error": "登录时发生错误，请重试",
+        "email_exists": "该邮箱已被注册",
+        "register_success": "注册成功",
+        "register_server_error": "注册时发生错误"
+    },
+    "api_msgs": {
+        "unauthorized": "未授权",
+        "domain_invalid": "请输入有效的域名",
+        "domain_exists": "该域名已添加",
+        "domain_add_error": "添加域名时发生错误",
+        "domain_missing_id": "缺少域名 ID",
+        "domain_not_found": "域名不存在",
+        "domain_deleted": "域名已删除",
+        "domain_delete_error": "删除域名时发生错误",
+        "domain_refresh_error": "更新域名信息时发生错误",
+        "prices_fetch_error": "获取价格配置失败",
+        "prices_invalid_params": "缺少必要参数或参数格式错误",
+        "prices_save_error": "保存价格配置失败",
+        "prices_missing_id": "缺少价格配置 ID",
+        "prices_deleted": "删除成功",
+        "prices_delete_error": "删除价格配置失败"
     }
 }

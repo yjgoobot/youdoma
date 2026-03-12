@@ -83,7 +83,7 @@ export default function DashboardPage() {
         const data = await res.json();
 
         if (!res.ok) {
-            throw new Error(data.error || "添加失败");
+            throw new Error(data.error || t("api_msgs.domain_add_error"));
         }
 
         setDomains((prev) => [data, ...prev]);
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             setDomains((prev) => prev.map((d) => (d.id === id ? updatedDomain : d)));
         } else {
             const data = await res.json();
-            throw new Error(data.error || "刷新失败");
+            throw new Error(data.error || t("api_msgs.domain_refresh_error"));
         }
     };
 
@@ -120,7 +120,7 @@ export default function DashboardPage() {
             <div className="flex min-h-screen items-center justify-center bg-gray-950">
                 <div className="flex items-center gap-3 text-gray-400">
                     <Globe className="h-6 w-6 animate-spin text-emerald-400" />
-                    加载中...
+                    {t("common.loading")}
                 </div>
             </div>
         );
@@ -172,8 +172,7 @@ export default function DashboardPage() {
                             <h1 className="text-2xl font-bold text-white">{t("dashboard.title")}</h1>
                         </div>
                         <p className="text-sm text-gray-400">
-                            {t("dashboard.search_placeholder").replace("搜索域名...", "Manage and monitor all your domains").replace("...", "")}
-                            {/* A bit hacky, normally need to extract this string too, let's just make sure the general labels work. Let's fix this properly. */}
+                            {t("dashboard.search_placeholder")}
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
@@ -182,7 +181,7 @@ export default function DashboardPage() {
                             className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
                         >
                             <DollarSign className="h-4 w-4 text-emerald-400" />
-                            {dict.price_config || "价格配置"}
+                            {t("prices.title")}
                         </Link>
                         <button
                             onClick={() => setModalOpen(true)}
@@ -201,7 +200,7 @@ export default function DashboardPage() {
                         <p className="mt-1 text-2xl font-bold text-white">{totalDomains}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">{dict.total_annual_cost || "每年总费用"}</p>
+                        <p className="text-sm text-gray-400">{t("dashboard.total_annual_cost")}</p>
                         <p className="mt-1 text-2xl font-bold text-emerald-400">¥{totalAnnualCost.toFixed(2)}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
@@ -209,7 +208,7 @@ export default function DashboardPage() {
                         <p className="mt-1 text-2xl font-bold text-yellow-400">{expiringDomains}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
-                        <p className="text-sm text-gray-400">{t("domain_list.status_expired") || "已过期"}</p>
+                        <p className="text-sm text-gray-400">{t("domain_list.status_expired")}</p>
                         <p className="mt-1 text-2xl font-bold text-red-400">{expiredDomains}</p>
                     </div>
                 </div>

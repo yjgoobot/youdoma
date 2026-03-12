@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Globe, Mail, Lock, Loader2 } from "lucide-react";
+import { useTranslation } from "@/i18n/client";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -12,6 +13,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,7 +34,7 @@ export default function LoginPage() {
                 router.refresh();
             }
         } catch {
-            setError("登录时发生错误，请重试");
+            setError(t("auth_errors.login_error"));
         } finally {
             setLoading(false);
         }
@@ -56,8 +58,8 @@ export default function LoginPage() {
                             You<span className="text-emerald-400">Doma</span>
                         </span>
                     </Link>
-                    <h1 className="mt-6 text-2xl font-bold text-white">欢迎回来</h1>
-                    <p className="mt-2 text-gray-400">登录你的账号继续管理域名</p>
+                    <h1 className="mt-6 text-2xl font-bold text-white">{t("auth.login_title")}</h1>
+                    <p className="mt-2 text-gray-400">{t("auth.login_subtitle")}</p>
                 </div>
 
                 {/* Form Card */}
@@ -71,7 +73,7 @@ export default function LoginPage() {
 
                         <div>
                             <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-300">
-                                邮箱地址
+                                {t("auth.email")}
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
@@ -81,7 +83,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    placeholder="you@example.com"
+                                    placeholder={t("auth.email_placeholder")}
                                     className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25"
                                 />
                             </div>
@@ -89,7 +91,7 @@ export default function LoginPage() {
 
                         <div>
                             <label htmlFor="password" className="mb-2 block text-sm font-medium text-gray-300">
-                                密码
+                                {t("auth.password")}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
@@ -99,7 +101,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    placeholder="输入你的密码"
+                                    placeholder={t("auth.password_placeholder_login")}
                                     className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25"
                                 />
                             </div>
@@ -113,19 +115,19 @@ export default function LoginPage() {
                             {loading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    登录中...
+                                    {t("auth.logging_in")}
                                 </>
                             ) : (
-                                "登录"
+                                t("auth.login_button")
                             )}
                         </button>
                     </form>
                 </div>
 
                 <p className="mt-6 text-center text-sm text-gray-400">
-                    还没有账号？{" "}
+                    {t("auth.no_account")}{" "}
                     <Link href="/register" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
-                        免费注册
+                        {t("auth.register_free")}
                     </Link>
                 </p>
             </div>

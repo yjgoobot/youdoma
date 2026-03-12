@@ -3,19 +3,21 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { lookupDomain } from "@/lib/whois";
+import { getDictionary } from "@/i18n/server";
 
 export async function POST(
     request: Request,
     { params }: { params: { id: string } | Promise<{ id: string }> }
 ) {
+    const dict = await getDictionary();
     const session = await getServerSession(authOptions);
     if (!session?.user) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     const userId = (session.user as { id?: string }).id;
     if (!userId) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     try {
@@ -28,7 +30,7 @@ export async function POST(
         });
 
         if (!domain) {
-            return NextResponse.json({ error: "域名不存在" }, { status: 404 });
+            return NextResponse.json({ error: dict.api_msgs.domain_not_found }, { status: 404 });
         }
 
         // Lookup WHOIS info
@@ -50,6 +52,7 @@ export async function POST(
         return NextResponse.json(updatedDomain);
     } catch (error) {
         console.error("Error refreshing domain:", error);
-        return NextResponse.json({ error: "更新域名信息时发生错误" }, { status: 500 });
+        const dict = await getDictionary();
+        return NextResponse.json({ error: dict.api_msgs.domain_refresh_error }, { status: 500 });
     }
 }

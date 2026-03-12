@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./db";
+import { getDictionary } from "@/i18n/server";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -12,8 +13,10 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
+                const dict = await getDictionary();
+
                 if (!credentials?.email || !credentials?.password) {
-                    throw new Error("请输入邮箱和密码");
+                    throw new Error(dict.auth_errors.email_password_empty);
                 }
 
                 const user = await prisma.user.findUnique({
@@ -21,7 +24,7 @@ export const authOptions: NextAuthOptions = {
                 });
 
                 if (!user || !user.password) {
-                    throw new Error("邮箱或密码错误");
+                    throw new Error(dict.auth_errors.email_password_wrong);
                 }
 
                 const isPasswordValid = await bcrypt.compare(
@@ -30,7 +33,7 @@ export const authOptions: NextAuthOptions = {
                 );
 
                 if (!isPasswordValid) {
-                    throw new Error("邮箱或密码错误");
+                    throw new Error(dict.auth_errors.email_password_wrong);
                 }
 
                 return {

@@ -3,18 +3,20 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { lookupDomain } from "@/lib/whois";
+import { getDictionary } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+    const dict = await getDictionary();
     const session = await getServerSession(authOptions);
     if (!session?.user) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     const userId = (session.user as { id?: string }).id;
     if (!userId) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     const domains = await prisma.domain.findMany({
@@ -26,21 +28,22 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const dict = await getDictionary();
     const session = await getServerSession(authOptions);
     if (!session?.user) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     const userId = (session.user as { id?: string }).id;
     if (!userId) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     try {
         const { name } = await request.json();
 
         if (!name || typeof name !== "string") {
-            return NextResponse.json({ error: "请输入有效的域名" }, { status: 400 });
+            return NextResponse.json({ error: dict.api_msgs.domain_invalid }, { status: 400 });
         }
 
         // Clean domain name
@@ -52,7 +55,7 @@ export async function POST(request: Request) {
         });
 
         if (existing) {
-            return NextResponse.json({ error: "该域名已添加" }, { status: 409 });
+            return NextResponse.json({ error: dict.api_msgs.domain_exists }, { status: 409 });
         }
 
         // Lookup WHOIS info
@@ -75,19 +78,20 @@ export async function POST(request: Request) {
         return NextResponse.json(domain, { status: 201 });
     } catch (error) {
         console.error("Error adding domain:", error);
-        return NextResponse.json({ error: "添加域名时发生错误" }, { status: 500 });
+        return NextResponse.json({ error: dict.api_msgs.domain_add_error }, { status: 500 });
     }
 }
 
 export async function DELETE(request: Request) {
+    const dict = await getDictionary();
     const session = await getServerSession(authOptions);
     if (!session?.user) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     const userId = (session.user as { id?: string }).id;
     if (!userId) {
-        return NextResponse.json({ error: "未授权" }, { status: 401 });
+        return NextResponse.json({ error: dict.api_msgs.unauthorized }, { status: 401 });
     }
 
     try {
@@ -95,7 +99,7 @@ export async function DELETE(request: Request) {
         const id = searchParams.get("id");
 
         if (!id) {
-            return NextResponse.json({ error: "缺少域名 ID" }, { status: 400 });
+            return NextResponse.json({ error: dict.api_msgs.domain_missing_id }, { status: 400 });
         }
 
         // Verify ownership
@@ -104,14 +108,14 @@ export async function DELETE(request: Request) {
         });
 
         if (!domain) {
-            return NextResponse.json({ error: "域名不存在" }, { status: 404 });
+            return NextResponse.json({ error: dict.api_msgs.domain_not_found }, { status: 404 });
         }
 
         await prisma.domain.delete({ where: { id } });
 
-        return NextResponse.json({ message: "域名已删除" });
+        return NextResponse.json({ message: dict.api_msgs.domain_deleted });
     } catch (error) {
         console.error("Error deleting domain:", error);
-        return NextResponse.json({ error: "删除域名时发生错误" }, { status: 500 });
+        return NextResponse.json({ error: dict.api_msgs.domain_delete_error }, { status: 500 });
     }
 }

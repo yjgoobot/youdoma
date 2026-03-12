@@ -34,7 +34,8 @@
         "expiring_soon": "Expiring Soon",
         "normal": "Normal",
         "refresh_all": "Refresh All",
-        "search_placeholder": "Manage and monitor all your domains"
+        "search_placeholder": "Manage and monitor all your domains",
+        "total_annual_cost": "Total Annual Cost"
     },
     "domain_list": {
         "domain": "Domain",
@@ -85,7 +86,8 @@
         "th_tld": "TLD",
         "th_price": "Price",
         "th_action": "Action",
-        "all_registrars": "All"
+        "all_registrars": "All",
+        "year": "yr"
     },
     "metadata": {
         "title": "YouDoma - Smart Domain Management",
@@ -98,5 +100,57 @@
         "delete": "Delete",
         "error": "An error occurred",
         "success": "Success"
+    },
+    "auth": {
+        "login_title": "Welcome Back",
+        "login_subtitle": "Log in to your account to continue managing domains",
+        "email": "Email Address",
+        "email_placeholder": "you@example.com",
+        "password": "Password",
+        "password_placeholder_login": "Enter your password",
+        "logging_in": "Logging in...",
+        "login_button": "Log in",
+        "no_account": "Don't have an account?",
+        "register_free": "Register for free",
+        "register_title": "Create an Account",
+        "register_subtitle": "Register to start managing your domains",
+        "username": "Username",
+        "username_placeholder": "Your name",
+        "password_placeholder_register": "At least 6 characters",
+        "confirm_password": "Confirm Password",
+        "confirm_password_placeholder": "Enter password again",
+        "registering": "Registering...",
+        "register_button": "Create Account",
+        "has_account": "Already have an account?",
+        "login_now": "Log in now"
+    },
+    "auth_errors": {
+        "email_password_empty": "Please enter email and password",
+        "email_password_wrong": "Incorrect email or password",
+        "passwords_mismatch": "Passwords do not match",
+        "password_too_short": "Password must be at least 6 characters",
+        "register_failed": "Registration failed, please try again",
+        "register_error": "An error occurred during registration, please try again",
+        "login_error": "An error occurred during login, please try again",
+        "email_exists": "Email is already registered",
+        "register_success": "Registration successful",
+        "register_server_error": "An error occurred during registration"
+    },
+    "api_msgs": {
+        "unauthorized": "Unauthorized",
+        "domain_invalid": "Please enter a valid domain",
+        "domain_exists": "Domain already added",
+        "domain_add_error": "Error adding domain",
+        "domain_missing_id": "Missing domain ID",
+        "domain_not_found": "Domain not found",
+        "domain_deleted": "Domain deleted",
+        "domain_delete_error": "Error deleting domain",
+        "domain_refresh_error": "Error updating domain info",
+        "prices_fetch_error": "Failed to fetch price config",
+        "prices_invalid_params": "Missing or invalid parameters",
+        "prices_save_error": "Failed to save price config",
+        "prices_missing_id": "Missing price config ID",
+        "prices_deleted": "Deleted successfully",
+        "prices_delete_error": "Failed to delete price config"
     }
 }

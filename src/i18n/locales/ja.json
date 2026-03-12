@@ -34,7 +34,8 @@
         "expiring_soon": "まもなく期限切れ",
         "normal": "正常",
         "refresh_all": "すべて更新",
-        "search_placeholder": "すべてのドメインの管理と監視"
+        "search_placeholder": "すべてのドメインの管理と監視",
+        "total_annual_cost": "年間総費用"
     },
     "domain_list": {
         "domain": "ドメイン",
@@ -85,7 +86,8 @@
         "th_tld": "TLD",
         "th_price": "価格",
         "th_action": "操作",
-        "all_registrars": "すべて"
+        "all_registrars": "すべて",
+        "year": "年"
     },
     "metadata": {
         "title": "YouDoma - スマートドメイン管理",
@@ -98,5 +100,57 @@
         "delete": "削除",
         "error": "エラーが発生しました",
         "success": "成功しました"
+    },
+    "auth": {
+        "login_title": "お帰りなさい",
+        "login_subtitle": "アカウントにログインしてドメイン管理を続ける",
+        "email": "メールアドレス",
+        "email_placeholder": "you@example.com",
+        "password": "パスワード",
+        "password_placeholder_login": "パスワードを入力",
+        "logging_in": "ログイン中...",
+        "login_button": "ログイン",
+        "no_account": "アカウントを持っていませんか？",
+        "register_free": "無料登録",
+        "register_title": "アカウント作成",
+        "register_subtitle": "登録してドメイン管理を始めましょう",
+        "username": "ユーザー名",
+        "username_placeholder": "あなたの名前",
+        "password_placeholder_register": "6文字以上",
+        "confirm_password": "パスワード確認",
+        "confirm_password_placeholder": "パスワードを再入力",
+        "registering": "登録中...",
+        "register_button": "アカウント作成",
+        "has_account": "すでにアカウントをお持ちですか？",
+        "login_now": "今すぐログイン"
+    },
+    "auth_errors": {
+        "email_password_empty": "メールアドレスとパスワードを入力してください",
+        "email_password_wrong": "メールアドレスまたはパスワードが間違っています",
+        "passwords_mismatch": "パスワードが一致しません",
+        "password_too_short": "パスワードは6文字以上で入力してください",
+        "register_failed": "登録に失敗しました。もう一度お試しください",
+        "register_error": "登録中にエラーが発生しました。もう一度お試しください",
+        "login_error": "ログイン中にエラーが発生しました。もう一度お試しください",
+        "email_exists": "このメールアドレスは既に登録されています",
+        "register_success": "登録完了",
+        "register_server_error": "登録中にエラーが発生しました"
+    },
+    "api_msgs": {
+        "unauthorized": "未承認",
+        "domain_invalid": "有効なドメインを入力してください",
+        "domain_exists": "このドメインは追加済みです",
+        "domain_add_error": "ドメインの追加中にエラーが発生しました",
+        "domain_missing_id": "ドメインIDがありません",
+        "domain_not_found": "ドメインが見つかりません",
+        "domain_deleted": "ドメインを削除しました",
+        "domain_delete_error": "ドメインの削除中にエラーが発生しました",
+        "domain_refresh_error": "ドメイン情報の更新中にエラーが発生しました",
+        "prices_fetch_error": "価格設定の取得に失敗しました",
+        "prices_invalid_params": "必須パラメータが不足または無効です",
+        "prices_save_error": "価格設定の保存に失敗しました",
+        "prices_missing_id": "価格設定IDがありません",
+        "prices_deleted": "削除成功",
+        "prices_delete_error": "価格設定の削除に失敗しました"
     }
 }
