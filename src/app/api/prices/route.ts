@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getDictionary } from "@/i18n/server";
+import { CURRENCIES } from "@/lib/currency";
 
 export async function GET() {
     try {
@@ -44,6 +45,13 @@ export async function POST(req: Request) {
         const { registrar, tld, price, currency } = body;
 
         if (!registrar || !tld || typeof price !== "number") {
+            return NextResponse.json(
+                { error: dict.api_msgs.prices_invalid_params },
+                { status: 400 }
+            );
+        }
+
+        if (currency !== undefined && currency !== null && !CURRENCIES.includes(currency)) {
             return NextResponse.json(
                 { error: dict.api_msgs.prices_invalid_params },
                 { status: 400 }

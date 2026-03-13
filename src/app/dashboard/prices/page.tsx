@@ -3,16 +3,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Trash2, Tag, Building2, Globe, DollarSign, Plus } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Tag, Building2, Globe, DollarSign, Plus, Pencil, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "@/i18n/client";
-import { getCurrencySymbol } from "@/lib/currency";
+import { CURRENCIES, getCurrencySymbol } from "@/lib/currency";
 
 interface DomainPrice {
     id: string;
     registrar: string;
     tld: string;
     price: number;
+    currency: string | null;
 }
 
 export default function PricesPage() {
@@ -27,6 +28,8 @@ export default function PricesPage() {
     const [registrar, setRegistrar] = useState("");
     const [tld, setTld] = useState("");
     const [price, setPrice] = useState("");
+    const [currency, setCurrency] = useState("");
+    const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
 
@@ -73,6 +76,14 @@ export default function PricesPage() {
         }
     }, [status, fetchData]);
 
+    const resetForm = () => {
+        setEditingPriceId(null);
+        setRegistrar("");
+        setTld("");
+        setPrice("");
+        setCurrency("");
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
@@ -92,22 +103,30 @@ export default function PricesPage() {
                 body: JSON.stringify({
                     registrar,
                     tld: formattedTld,
-                    price: parseFloat(price)
+                    price: parseFloat(price),
+                    currency: currency || null,
                 }),
             });
 
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || t("common.error"));
 
-            setRegistrar("");
-            setTld("");
-            setPrice("");
-            fetchData();
+            resetForm();
+            await fetchData();
         } catch (err: any) {
             setError(err.message);
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleEdit = (item: DomainPrice) => {
+        setEditingPriceId(item.id);
+        setRegistrar(item.registrar);
+        setTld(item.tld);
+        setPrice(item.price.toString());
+        setCurrency(item.currency || "");
+        setError("");
     };
 
     const handleDelete = async (id: string) => {
@@ -169,7 +188,7 @@ export default function PricesPage() {
                         <div className="glass-card rounded-xl p-6">
                             <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                 <Plus className="h-5 w-5 text-emerald-400" />
-                                {t("prices.add_rule")}
+                                {editingPriceId ? t("prices.edit_rule") : t("prices.add_rule")}
                             </h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {error && (
@@ -240,6 +259,25 @@ export default function PricesPage() {
                                         />
                                     </div>
                                 </div>
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-300">
+                                        {t("prices.currency_label")}
+                                    </label>
+                                    <select
+                                        value={currency}
+                                        onChange={(e) => setCurrency(e.target.value)}
+                                        className="w-full rounded-xl bg-white/5 py-2.5 px-4 text-white outline-none border border-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                                    >
+                                        <option value="" className="bg-gray-900 text-gray-200">
+                                            {t("settings.use_default")} ({userCurrency})
+                                        </option>
+                                        {CURRENCIES.map((code) => (
+                                            <option key={code} value={code} className="bg-gray-900 text-gray-200">
+                                                {getCurrencySymbol(code)} {code}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
@@ -250,8 +288,18 @@ export default function PricesPage() {
                                     ) : (
                                         <Save className="h-4 w-4" />
                                     )}
-                                    {t("prices.save_rule")}
+                                    {editingPriceId ? t("prices.update_rule") : t("prices.save_rule")}
                                 </button>
+                                {editingPriceId && (
+                                    <button
+                                        type="button"
+                                        onClick={resetForm}
+                                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/5 py-2.5 text-sm font-semibold text-gray-200 border border-white/10 transition-all hover:bg-white/10"
+                                    >
+                                        <X className="h-4 w-4" />
+                                        {t("prices.cancel_edit")}
+                                    </button>
+                                )}
                             </form>
                         </div>
                     </div>
@@ -284,6 +332,9 @@ export default function PricesPage() {
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                                 {t("prices.th_price")}
                                             </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                                {t("prices.th_currency")}
+                                            </th>
                                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                                                 {t("prices.th_action")}
                                             </th>
@@ -305,9 +356,19 @@ export default function PricesPage() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-400">
-                                                    {getCurrencySymbol(userCurrency)}{p.price.toFixed(2)} / {t("prices.year")}
+                                                    {getCurrencySymbol(p.currency || userCurrency)}{p.price.toFixed(2)} / {t("prices.year")}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                                    {p.currency || t("settings.use_default")}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                                    <button
+                                                        onClick={() => handleEdit(p)}
+                                                        className="text-gray-500 hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-emerald-500/10"
+                                                        title={t("prices.edit")}
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </button>
                                                     <button
                                                         onClick={() => handleDelete(p.id)}
                                                         className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-red-500/10"
