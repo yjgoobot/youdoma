@@ -35,7 +35,8 @@
         "normal": "正常",
         "refresh_all": "すべて更新",
         "search_placeholder": "すべてのドメインの管理と監視",
-        "total_annual_cost": "年間総費用"
+        "total_annual_cost": "年間総費用",
+        "settings": "設定"
     },
     "domain_list": {
         "domain": "ドメイン",
@@ -52,6 +53,16 @@
         "action_delete": "削除",
         "delete_confirm": "このドメインを削除してもよろしいですか？",
         "days_left": "残り {{days}} 日"
+    },
+    "domain_edit": {
+        "title": "ドメインを編集",
+        "custom_price": "カスタム価格（年間）",
+        "custom_price_placeholder": "空欄の場合は価格ルールを使用",
+        "currency": "通貨",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "save_success": "保存しました",
+        "save_error": "保存に失敗しました"
     },
     "add_domain_modal": {
         "title": "ドメインの追加",
@@ -87,7 +98,8 @@
         "th_price": "価格",
         "th_action": "操作",
         "all_registrars": "すべて",
-        "year": "年"
+        "year": "年",
+        "currency_label": "通貨"
     },
     "metadata": {
         "title": "YouDoma - スマートドメイン管理",
@@ -100,6 +112,21 @@
         "delete": "削除",
         "error": "エラーが発生しました",
         "success": "成功しました"
+    },
+    "settings": {
+        "title": "設定",
+        "subtitle": "アカウント設定を管理する",
+        "currency_label": "デフォルト通貨",
+        "currency_desc": "価格表示に使用するデフォルト通貨を設定します",
+        "currency_USD": "米ドル (USD)",
+        "currency_CNY": "人民元 (CNY)",
+        "currency_JPY": "日本円 (JPY)",
+        "currency_EUR": "ユーロ (EUR)",
+        "currency_GBP": "英ポンド (GBP)",
+        "save_success": "設定を保存しました",
+        "save_error": "設定の保存に失敗しました",
+        "domain_currency": "ドメイン通貨",
+        "use_default": "デフォルトを使用"
     },
     "auth": {
         "login_title": "お帰りなさい",

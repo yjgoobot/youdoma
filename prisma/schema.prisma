@@ -41,6 +41,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  currency      String    @default("CNY")
   accounts      Account[]
   sessions      Session[]
   domains       Domain[]
@@ -63,6 +64,8 @@ model Domain {
   registeredDate DateTime?
   updatedDate   DateTime?
   monthlyCost   Float?    @default(0)
+  customPrice   Float?
+  currency      String?
   lastScanned   DateTime? @default(now())
   status        String?   @default("active")
   whoisRaw      Json?
@@ -79,6 +82,7 @@ model DomainPrice {
   registrar String
   tld       String
   price     Float
+  currency  String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

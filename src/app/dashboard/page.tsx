@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Plus, Globe, LayoutDashboard, DollarSign } from "lucide-react";
+import { Plus, Globe, LayoutDashboard, DollarSign, Settings } from "lucide-react";
 import Link from "next/link";
 import AddDomainModal from "@/components/AddDomainModal";
 import DomainList from "@/components/DomainList";
 import { useTranslation } from "@/i18n/client";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Domain {
     id: string;
@@ -17,6 +18,7 @@ interface Domain {
     registeredDate: string | null;
     status: string | null;
     lastScanned: string | null;
+    currency: string | null;
     createdAt: string;
 }
 
@@ -33,6 +35,7 @@ export default function DashboardPage() {
     const router = useRouter();
     const [domains, setDomains] = useState<Domain[]>([]);
     const [prices, setPrices] = useState<DomainPrice[]>([]);
+    const [userCurrency, setUserCurrency] = useState("CNY");
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -47,9 +50,10 @@ export default function DashboardPage() {
     const fetchDomainsAndPrices = useCallback(async () => {
         try {
             setLoading(true);
-            const [domainsRes, pricesRes] = await Promise.all([
+            const [domainsRes, pricesRes, settingsRes] = await Promise.all([
                 fetch("/api/domains"),
-                fetch("/api/prices")
+                fetch("/api/prices"),
+                fetch("/api/user/settings")
             ]);
             if (domainsRes.ok) {
                 const data = await domainsRes.json();
@@ -58,6 +62,10 @@ export default function DashboardPage() {
             if (pricesRes.ok) {
                 const data = await pricesRes.json();
                 setPrices(data);
+            }
+            if (settingsRes.ok) {
+                const data = await settingsRes.json();
+                setUserCurrency(data.currency || "CNY");
             }
         } catch (error) {
             console.error("Failed to fetch domains and prices:", error);
@@ -177,6 +185,13 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-3">
                         <Link
+                            href="/dashboard/settings"
+                            className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                        >
+                            <Settings className="h-4 w-4 text-emerald-400" />
+                            {t("dashboard.settings")}
+                        </Link>
+                        <Link
                             href="/dashboard/prices"
                             className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
                         >
@@ -201,7 +216,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="glass-card rounded-xl p-5">
                         <p className="text-sm text-gray-400">{t("dashboard.total_annual_cost")}</p>
-                        <p className="mt-1 text-2xl font-bold text-emerald-400">¥{totalAnnualCost.toFixed(2)}</p>
+                        <p className="mt-1 text-2xl font-bold text-emerald-400">{getCurrencySymbol(userCurrency)}{totalAnnualCost.toFixed(2)}</p>
                     </div>
                     <div className="glass-card rounded-xl p-5">
                         <p className="text-sm text-gray-400">{t("dashboard.expiring_soon")}</p>
@@ -217,6 +232,7 @@ export default function DashboardPage() {
                 <DomainList
                     domains={domains}
                     prices={prices}
+                    userCurrency={userCurrency}
                     onRefresh={handleRefreshDomain}
                     onDelete={handleDeleteDomain}
                     loading={loading}

@@ -35,7 +35,8 @@
         "normal": "状态正常",
         "refresh_all": "全部刷新",
         "search_placeholder": "管理和监控你的所有域名",
-        "total_annual_cost": "每年总费用"
+        "total_annual_cost": "每年总费用",
+        "settings": "设置"
     },
     "domain_list": {
         "domain": "域名",
@@ -52,6 +53,16 @@
         "action_delete": "删除",
         "delete_confirm": "确定要删除这个域名吗？",
         "days_left": "剩 {{days}} 天"
+    },
+    "domain_edit": {
+        "title": "编辑域名",
+        "custom_price": "自定义价格（每年）",
+        "custom_price_placeholder": "留空则使用价格规则",
+        "currency": "货币单位",
+        "save": "保存",
+        "cancel": "取消",
+        "save_success": "已保存",
+        "save_error": "保存失败"
     },
     "add_domain_modal": {
         "title": "添加域名",
@@ -87,7 +98,8 @@
         "th_price": "价格",
         "th_action": "操作",
         "all_registrars": "全部",
-        "year": "年"
+        "year": "年",
+        "currency_label": "货币单位"
     },
     "metadata": {
         "title": "YouDoma - 智能域名管理",
@@ -100,6 +112,21 @@
         "delete": "删除",
         "error": "发生错误",
         "success": "操作成功"
+    },
+    "settings": {
+        "title": "设置",
+        "subtitle": "管理你的账户偏好",
+        "currency_label": "默认货币",
+        "currency_desc": "设置价格显示使用的默认货币单位",
+        "currency_USD": "美元 (USD)",
+        "currency_CNY": "人民币 (CNY)",
+        "currency_JPY": "日元 (JPY)",
+        "currency_EUR": "欧元 (EUR)",
+        "currency_GBP": "英镑 (GBP)",
+        "save_success": "设置已保存",
+        "save_error": "保存设置失败",
+        "domain_currency": "域名货币",
+        "use_default": "使用默认"
     },
     "auth": {
         "login_title": "欢迎回来",

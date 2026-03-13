@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { registrar, tld, price } = body;
+        const { registrar, tld, price, currency } = body;
 
         if (!registrar || !tld || typeof price !== "number") {
             return NextResponse.json(
@@ -58,12 +58,13 @@ export async function POST(req: Request) {
                     tld,
                 },
             },
-            update: { price },
+            update: { price, currency: currency || null },
             create: {
                 userId,
                 registrar,
                 tld,
                 price,
+                currency: currency || null,
             },
         });
 

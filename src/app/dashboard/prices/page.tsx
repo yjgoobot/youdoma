@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Trash2, Tag, Building2, Globe, DollarSign, Plus } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "@/i18n/client";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface DomainPrice {
     id: string;
@@ -21,6 +22,7 @@ export default function PricesPage() {
     const [prices, setPrices] = useState<DomainPrice[]>([]);
     const [registrars, setRegistrars] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [userCurrency, setUserCurrency] = useState("CNY");
 
     const [registrar, setRegistrar] = useState("");
     const [tld, setTld] = useState("");
@@ -37,9 +39,10 @@ export default function PricesPage() {
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
-            const [pricesRes, domainsRes] = await Promise.all([
+            const [pricesRes, domainsRes, settingsRes] = await Promise.all([
                 fetch("/api/prices"),
-                fetch("/api/domains")
+                fetch("/api/domains"),
+                fetch("/api/user/settings")
             ]);
 
             if (pricesRes.ok) {
@@ -52,6 +55,10 @@ export default function PricesPage() {
                     new Set(data.map((d: any) => d.registrar).filter(Boolean))
                 ) as string[];
                 setRegistrars(uniqueRegistrars);
+            }
+            if (settingsRes.ok) {
+                const data = await settingsRes.json();
+                setUserCurrency(data.currency || "CNY");
             }
         } catch (error) {
             console.error("Failed to fetch data:", error);
@@ -298,8 +305,7 @@ export default function PricesPage() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-400">
-                                                    ¥{p.price.toFixed(2)} / yr
-                                                    {/* Changed text from /年 to / yr to look cleaner in english or general, although normally this is translated too. */}
+                                                    {getCurrencySymbol(userCurrency)}{p.price.toFixed(2)} / {t("prices.year")}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                                                     <button

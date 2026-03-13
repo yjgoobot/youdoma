@@ -35,7 +35,8 @@
         "normal": "Normal",
         "refresh_all": "Refresh All",
         "search_placeholder": "Manage and monitor all your domains",
-        "total_annual_cost": "Total Annual Cost"
+        "total_annual_cost": "Total Annual Cost",
+        "settings": "Settings"
     },
     "domain_list": {
         "domain": "Domain",
@@ -52,6 +53,16 @@
         "action_delete": "Delete",
         "delete_confirm": "Are you sure you want to delete this domain?",
         "days_left": "{{days}} days"
+    },
+    "domain_edit": {
+        "title": "Edit Domain",
+        "custom_price": "Custom Price (Annual)",
+        "custom_price_placeholder": "Leave empty to use price rules",
+        "currency": "Currency",
+        "save": "Save",
+        "cancel": "Cancel",
+        "save_success": "Saved",
+        "save_error": "Failed to save"
     },
     "add_domain_modal": {
         "title": "Add New Domain",
@@ -87,7 +98,8 @@
         "th_price": "Price",
         "th_action": "Action",
         "all_registrars": "All",
-        "year": "yr"
+        "year": "yr",
+        "currency_label": "Currency"
     },
     "metadata": {
         "title": "YouDoma - Smart Domain Management",
@@ -100,6 +112,21 @@
         "delete": "Delete",
         "error": "An error occurred",
         "success": "Success"
+    },
+    "settings": {
+        "title": "Settings",
+        "subtitle": "Manage your account preferences",
+        "currency_label": "Default Currency",
+        "currency_desc": "Set the default currency used for price display",
+        "currency_USD": "US Dollar (USD)",
+        "currency_CNY": "Chinese Yuan (CNY)",
+        "currency_JPY": "Japanese Yen (JPY)",
+        "currency_EUR": "Euro (EUR)",
+        "currency_GBP": "British Pound (GBP)",
+        "save_success": "Settings saved",
+        "save_error": "Failed to save settings",
+        "domain_currency": "Domain Currency",
+        "use_default": "Use Default"
     },
     "auth": {
         "login_title": "Welcome Back",
