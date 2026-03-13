@@ -19,6 +19,7 @@ interface Domain {
     status: string | null;
     lastScanned: string | null;
     currency: string | null;
+    customPrice: number | null;
     createdAt: string;
 }
 
@@ -27,6 +28,7 @@ interface DomainPrice {
     registrar: string;
     tld: string;
     price: number;
+    currency: string | null;
 }
 
 export default function DashboardPage() {
